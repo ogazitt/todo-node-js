@@ -14,6 +14,15 @@ export class Server {
     this.directory = new Directory();
   }
 
+  async getUser(req: JWTRequest, res: Response) {
+    const { userID } = req.params;
+    if(req.auth.sub === userID) {
+      res.json(await this.directory.getUserByIdentity(userID));
+    } else {
+      res.json(await this.directory.getUserById(userID));
+    }
+  }
+
   async list(_: Request, res: Response) {
     const todos = await this.store.list();
     res.json(todos);
