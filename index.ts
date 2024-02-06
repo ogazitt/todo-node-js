@@ -2,7 +2,7 @@ import express = require("express");
 import cors = require("cors");
 import { Store } from "./store";
 import { Server } from "./server";
-import { checkJwt, checkAuthz } from "./auth";
+import { checkJwt, authzMiddleware } from "./auth";
 import * as dotenv from "dotenv";
 import * as dotenvExpand from "dotenv-expand";
 
@@ -16,13 +16,13 @@ const PORT = 3001;
 
 Store.open().then((store) => {
   const server = new Server(store);
-  const middleware = checkAuthz(store);
+  const checkAuthz = authzMiddleware(store);
 
-  app.get("/users/:userID", checkJwt, middleware, server.getUser.bind(server));
-  app.get("/todos", checkJwt, middleware, server.list.bind(server));
-  app.post("/todos", checkJwt, middleware, server.create.bind(server));
-  app.put("/todos/:id", checkJwt, middleware, server.update.bind(server));
-  app.delete("/todos/:id", checkJwt, middleware, server.delete.bind(server));
+  app.get("/users/:userID", checkJwt, checkAuthz, server.getUser.bind(server));
+  app.get("/todos", checkJwt, checkAuthz, server.list.bind(server));
+  app.post("/todos", checkJwt, checkAuthz, server.create.bind(server));
+  app.put("/todos/:id", checkJwt, checkAuthz, server.update.bind(server));
+  app.delete("/todos/:id", checkJwt, checkAuthz, server.delete.bind(server));
 
   app.listen(PORT, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);

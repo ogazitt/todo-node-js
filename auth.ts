@@ -39,7 +39,7 @@ const authClient = new Authorizer(
 // currently wired to Aserto, would instead make an AuthZEN REST call
 // would still need specific configuration - Authorizer URL, API key, etc
 
-export const checkAuthz = (store) => {
+export const authzMiddleware = (store) => {
   const middleware = new Middleware({
     client: authClient,
     policy: {

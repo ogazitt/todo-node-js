@@ -40,7 +40,6 @@ export class Server {
     } catch (error) {
       res.status(422).send({error: (error as Error).message})
     }
-
   }
 
   async update(req: JWTRequest, res: Response) {
