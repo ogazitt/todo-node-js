@@ -6,7 +6,7 @@ import * as dotenvExpand from "dotenv-expand";
 
 dotenvExpand.expand(dotenv.config());
 
-import { Authorizer, Middleware, getSSLCredentials } from "@aserto/aserto-node";
+import { Authorizer, Middleware, SubIdentityMapper, getSSLCredentials } from "@aserto/aserto-node";
 import { getConfig } from "./config";
 
 export const checkJwt = jwt({
@@ -55,6 +55,7 @@ export const authzMiddleware = (store) => {
       const todo = await store.get(req.params.id);
       return { ownerID: todo.OwnerID };
     },
+    identityMapper: SubIdentityMapper()
   });
   return middleware.Authz();
 };
